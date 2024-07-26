@@ -1,0 +1,202 @@
+{% extends 'core/skeleton.html' %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %}Cart {% endblock %}
+{% block body %}
+
+<section class="py-4">
+    <div class="container">
+	{% if error_message %}
+	
+	<div class="alert alert-danger" role="alert">
+	    {{error_message}}
+	</div>
+
+	{% elif success_message %}
+	
+	<div class="success alert-success" role="alert">
+	    {{ success_message }}
+	</div>
+
+	{% endif%}
+
+	<!-- =================== COMPONENT CART+SUMMARY ====================== -->
+	<div class="row">
+	    <main class="col-lg-9">
+
+		<div class="card mb-4">
+		    <div class="card-body p-lg-4">
+			<h4 class="card-title mb-4">Shopping cart</h4>
+			{% for item in cart %}
+			<article class="row mb-4">
+			    <div class="col-lg-9">
+				<figure class="d-flex align-items-start">
+				    <div class="me-3 flex-shrink-0">
+					<img src="{{ item.product.image.url}}" class="size-100x100 img-thumbnail">
+				    </div>
+				    <figcaption class="info">
+					<a class='title' href='#'>{{ item.product.name }}</a>
+					<p class="text-muted"> 
+					    {{item.product.description}}
+					</p>
+					<!-- <a href="#" class="btn btn-light text-danger btn-sm">Remove</a> 
+					     <a href="#"  class="btn btn-light btn-sm">Save for later</a> -->
+					<a href="{% url 'delete_cart_item' item.id %}" class="btn btn-light text-danger btn-sm">Remove</a> 
+				    </figcaption>
+				</figure>
+			    </div> 
+			    <div class="col-lg-3">
+				<div class="text-end mb-2">
+				    <var class="h6">GHC {{ item.price|pesewas_to_cedis|intcomma }}</var> <p style="width: 100px" class="float-end">
+					Qty: {{ item.quantity }}
+					
+				    </p>
+				</div> <!-- price-wrap .// -->
+				
+
+			    </div>
+			</article> <!-- row.// -->
+			<hr>
+			{% endfor %}
+
+			<a class='btn btn-light' href='/'> 
+			    <i class="fa fa-arrow-left me-2"></i> Back to shop 
+			</a>
+
+		    </div> <!-- card-body .// -->
+		</div> <!-- card.// -->
+
+	    </main> <!-- col.// -->
+	    <aside class="col-lg-3">
+
+		<div class="card shadow-lg">
+		    <div class="card-body">
+			<dl class="row">
+			    <dt class="col-7 fw-normal text-muted">Subtotal: </dt>
+			    {% for item in cart %}
+			    
+			    <dd class="col-5 text-end">GHC {{ item.price|pesewas_to_cedis|intcomma }}</dd>
+			    <dt class="col-7 fw-normal text-muted"></dt>
+			    {% endfor %}
+			    <!-- <dd class="col-5 text-end">$143.90</dd>
+
+				 <dt class="col-7 fw-normal text-muted">Discount:</dt>
+				 <dd class="col-5 text-end">0</dd>
+
+				 <dt class="col-7 fw-normal text-muted">Tax:</dt>
+				 <dd class="col-5 text-end">+ $14.00 </dd>
+
+				 <dt class="col-7 fw-normal text-muted">Shipping:</dt>
+				 <dd class="col-5 text-end">+ $9.50 </dd> -->
+			</dl>
+			<hr>
+			<dl class="row">
+			    <dt class="col-7 h5 text-muted">Total:</dt>
+			    <dd class="col-5 h5 text-end">Total:  GHC {{ total_price|pesewas_to_cedis|intcomma }} </dd>
+			</dl>
+
+			<div class="my-3">
+				<button class='btn btn-lg p-3 btn-success w-100' data-bs-toggle="modal" data-bs-target="#purchaseModal"> Make Purchase </button>
+			</div>
+			<p class="text-center mt-3">
+			    <!-- <img src="images/misc/payments.png" height="24"> -->
+			</p>
+
+		    </div> <!-- card-body.// -->
+		</div> <!-- card.// -->
+
+	    </aside> <!-- col.// -->
+
+	</div> <!-- row.// -->
+	<!-- =================== COMPONENT 1 CART+SUMMARY .//END  ====================== -->
+
+
+
+	<article class="rounded p-5 bg-gray-light">
+	    
+	    <!-- ---- features ----	 -->
+	    <div class="row">
+		<div class="col-md-3">
+		    <!-- item-feature -->
+		    <figure class="d-flex align-items-center">
+			<span class="icon me-3 rounded-circle size-48x48 bg-gray">
+			    <i class="fa fa-lock fa-lg"></i>
+			</span> 
+			<figcaption>
+			    Secure Payment
+			    <p class="mb-0 text-muted"> </p>
+			</figcaption>
+		    </figure> 
+		    <!-- item-feature .// -->
+		</div> <!-- col.// -->
+		<div class="col-md-3">
+		    <!-- item-feature -->
+		    <figure class="d-flex align-items-center">
+			<span class="icon me-3 rounded-circle size-48x48 bg-gray">
+			    <i class="fa fa-phone fa-lg"></i>
+			</span> 
+			<figcaption>
+			    Customer Support
+			    <p class="mb-0 text-muted"> </p>
+			</figcaption>
+		    </figure> 
+		    <!-- item-feature .// -->
+		</div> <!-- col.// -->
+		<div class="col-md-3">
+		    <!-- item-feature -->
+		    <figure class="d-flex align-items-center">
+			<span class="icon me-3 rounded-circle size-48x48 bg-gray">
+			    <i class="fa fa-truck fa-lg"></i>
+			</span> 
+			<figcaption>
+			    Free Delivery
+			    <p class="mb-0 text-muted">  </p>
+			</figcaption>
+		    </figure> 
+		    <!-- item-feature .// -->
+		</div> <!-- col.// -->
+		<div class="col-md-3">
+		    <!-- item-feature -->
+		    <!-- item-feature .// -->
+		</div> <!-- col.// -->
+	    </div>
+	    <!-- ---- features .// ----  -->
+	</article>
+
+    </div> <!-- container .//  -->
+</section>
+
+
+<div class="modal fade" id="purchaseModal" tabindex="-1" aria-labelledby="purchaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title" id="exampleModalLabel">Make Purchase</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="input-group mx-auto">
+		    <form method="post" class="mx-auto">
+			{% csrf_token %}
+			<input name="total_price" type="hidden" value="{{ total_price }}"/>
+			<input name="payment_method" type="hidden" value="pay_with_coins"/>
+			<button type-success class='btn btn-lg p-3 btn-success'>  <i class="fa fa-coins"></i> Pay with coins </button>
+		    </form>
+		    <form method="post" class="mx-auto">
+			{% csrf_token %}
+			<input name="total_price" type="hidden" value="{{ total_price }}"/>
+			<input name="payment_method" type="hidden" value="pay_on_delivery"/>
+			<button type-success class='btn btn-lg p-3 btn-success'> <i class="fa-solid fa-truck"></i> Pay on delivery </button>
+		    </form>
+		</div>
+	    </div>
+	     <div class="modal-footer">
+		 <p class="text-muted text-center">Note: Opting for 'Pay on Delivery' transfers all transaction responsibilities to you and the vendor, with no liability to our platform.</p>
+	     </div>
+	</div>
+    </div>
+</div>
+
+
+
+{% endblock %}

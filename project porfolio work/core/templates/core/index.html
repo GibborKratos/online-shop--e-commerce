@@ -1,0 +1,180 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %}Home{% endblock %}
+{% block body %}
+
+<!-- ================ SECTION INTRO ================ -->
+<section class="section-intro mb-3 mt-3">
+    <div class="container">
+	<main class="card p-3">
+	    <div class="row">
+		<aside class="col-lg-3">
+		    <nav class="nav flex-column nav-pills mb-3 mb-lg-0">
+			{% for category in categories %}
+			<a class="nav-link" href="/category/{{ category.name|lowercase }}">{{category.name }}</a>
+			
+			{% endfor %}
+		    </nav>
+		</aside>
+		<div class="col-lg-9">
+
+		    <div class="row">
+			<div class="col-xxl-9 col-lg-8">
+			    
+			    <!-- carousel -->
+			    <div id="carouselMain" class="carousel-main carousel slide" data-bs-ride="carousel">
+				<div class="carousel-inner">
+				    <article class="carousel-item active">
+					<div class="carousel-caption">
+					    <h2 class="mb-3">
+						<span class="fw-normal">Latest trending</span> <br> <strong>Electronics </strong>
+					    </h2>
+					    <a href="/category/electronics" class="btn btn-warning"> View more </a>
+					</div>
+					<img style="height: 352px;" src="{% static 'images/main-tech.png' %}" class="d-block w-100 img-cover" alt="Banner">
+				    </article>
+				    
+				    <article class="carousel-item">
+					<div class="carousel-caption">
+					    <h2 class="mb-3">
+						<span class="fw-normal">Latest trending</span> <br> <strong>Books </strong>
+					    </h2>
+					    <a href="/category/books" class="btn btn-warning"> View more </a>
+					</div>
+					<img style="height: 352px;" src="{% static 'images/main-books.jpg' %}" class="d-block w-100 img-cover" alt="Banner">
+				    </article>
+				  <!-- carousel-inner .// -->
+
+				<article class="carousel-item">
+					<div class="carousel-caption">
+					    <h2 class="mb-3">
+						<span class="fw-normal">Latest trending</span> <br> <strong>Apparel </strong>
+					    </h2>
+					    <a href="/category/apparel" class="btn btn-warning"> View more </a>
+					</div>
+					<img style="height: 352px;" src="{% static 'images/main-apparel.png' %}" class="d-block w-100 img-cover" alt="Banner">
+				</article>
+
+				<article class="carousel-item">
+					<div class="carousel-caption">
+					    <h2 class="mb-3">
+						<span class="fw-normal">Latest trending</span> <br> <strong>Homes </strong>
+					    </h2>
+					    <a href="/category/homes" class="btn btn-warning"> View more </a>
+					</div>
+					<img style="height: 352px;" src="{% static 'images/main-homes.jpg' %}" class="d-block w-100 img-cover" alt="Banner">
+				</article>
+
+				<article class="carousel-item">
+					<div class="carousel-caption">
+					    <h2 class="mb-3">
+						<span class="fw-normal">Latest trending</span> <br> <strong>Vehicles </strong>
+					    </h2>
+					    <a href="/category/vehicles" class="btn btn-warning"> View more </a>
+					</div>
+					<img style="height: 352px;" src="{% static 'images/main-vehicles.jpg' %}" class="d-block w-100 img-cover" alt="Banner">
+				</article>
+				</div>
+
+				<button class="carousel-control-prev" type="button" data-bs-target="#carouselMain" data-bs-slide="prev">
+				    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				    <span class="visually-hidden">Previous</span>
+				</button>
+
+				<button class="carousel-control-next" type="button" data-bs-target="#carouselMain" data-bs-slide="next">
+				    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+				    <span class="visually-hidden">Next</span>
+				</button>
+
+			    </div>
+			    <!-- carousel .//end -->
+
+			</div>
+			<div class="col-xxl-3 col-lg-4 d-none d-lg-block">
+			    <!-- main-right -->
+			    <div class="bg-primary-light p-3 rounded mb-3">
+				<p class="d-flex mb-3 text-base">
+				    <img src="{% static 'images/avatar.jpg' %}" class="img-avatar me-2" width="44" height="44"  alt="">
+				    {% if user.is_authenticated %}
+				    <span>Hi, {{ user.first_name }}</span>
+				    {% else %}
+				    <span>Hi, guest</span>
+				    {% endif %}
+				</p>
+
+			    </div>
+
+			    <div class="bg-warning text-white p-3 rounded mb-2">
+				Get 10 coins for every friend you refer
+				<br> <a href="#" class="text-white mt-1 fw-bold d-inline-block"  data-bs-toggle="modal" data-bs-target="#referralModal">Refer a friend</a>
+			    </div>
+			    
+			    <!-- main-right -->
+			</div>
+		    </div> <!-- row.// -->
+		</div>
+		<!-- col.// -->
+	    </div>
+	</main>
+    </div> <!-- container end.// -->
+</section>
+<!-- ================ SECTION INTRO END.// ================ -->
+
+
+
+
+<!-- ================ SECTION PRODUCTS ================ -->
+<section class="pb-3">
+    <div class="container">
+
+	<header class="section-heading">
+	    <h3>New products</h3>
+	</header>
+
+	<div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2">
+
+	    {% for product in products %}
+	    <div class="col">
+		<figure class="card card-product-grid">
+		    <a href="{% url 'product_detail' product.id %}" data-bs-toggle="tooltip" data-bs-title="{{ product.description|smart_truncate:50 }}" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
+		    <figcaption class="p-3">
+			<div class="price-wrap">
+			    <span class="price">GHC {{ product.price|pesewas_to_cedis|intcomma }}</span>
+			</div> <!-- price-wrap.// -->
+			<a href="{% url 'product_detail' product.id %}" data-bs-toggle="tooltip" data-bs-title="{{ product.name }}" class="title"> {{ product.name|smart_truncate:20 }}</a>
+		    </figcaption>
+		</figure>
+	    </div> <!-- col end.// -->
+	    {% endfor %}
+
+	</div> <!-- row end.// -->
+    </div> <!-- container end.// -->
+</section>
+<!-- ================ SECTION PRODUCTS END.// ================ -->
+
+
+<div class="modal fade" id="referralModal" tabindex="-1" aria-labelledby="bargainModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title" id="exampleModalLabel">Refer a friend</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	    </div>
+	    <div class="modal-body">
+		  
+		    <div class="mb-3">
+			<label for="recipient-name" class="col-form-label">Copy the link and send it to a friend</label>
+			<input class="form-control" type="text" value="http://127.0.0.1:8000{% url 'account_signup'  %}?referrer={{ user.username }}"/>
+		    </div>
+
+	    </div>
+	    <div class="modal-footer">
+	    </div>
+	</div>
+    </div>
+</div>
+
+
+{% endblock %}

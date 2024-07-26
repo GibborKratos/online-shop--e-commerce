@@ -1,0 +1,70 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %} Deliveries {% endblock %}
+{% block body %}
+<!-- ============== SECTION CONTENT ============== -->
+<section class="padding-bottom">
+    <div class="container">
+			<h5 class="card-title"> My orders </h5> 
+
+
+			
+
+
+			<!--  ======== item order ======== -->
+			{% for order in orders %}
+			<article class="card border-primary mb-4">
+			    <div class="card-body">
+				<header class="d-lg-flex">
+				    <div class="flex-grow-1">
+					<h6 class="mb-0">Order ID:  {{order.id}} <i class="dot"></i>  
+					    <span class="text-warning"> {{ order.status }} </span>
+					</h6>
+					
+				    </div>
+				    <div>
+					
+				    </div>
+				</header>
+				<hr>
+
+				<ul class="row">
+				    {% for item in order.orderitem_set.all %}
+				    <li class="col-xl-4  col-lg-6">
+					<figure class="d-flex mb-3">
+					    <div class="flex-shrink-0 me-2">
+						<img width="72" height="72" src="{{ item.product.image.url }}" class="size-72x72 img-thumbnail">
+					    </div>
+					    <figcaption>
+						<p class="mb-1">{{ item.product.name}} <br> </p>
+						<b>GHC {{ item.product.price|pesewas_to_cedis|intcomma }} </b>
+					    </figcaption>
+					</figure> 
+				    </li>
+				    {% endfor %}
+				</ul>
+				<b>Total: GHC {{ order.total_price|pesewas_to_cedis|intcomma }} </b>
+				<br>
+				<a href="/deliver/{{order.id}}"><button class="btn btn-success">Delivered</button></a>
+			    </div> <!-- card-body .// -->
+			    
+			</article> <!-- card .// --> 
+			<!--  ======== item order .// ======== -->
+			{% endfor %}
+
+			
+		    </div> <!-- card-body .// -->
+		</article> <!-- card .// --> 
+	    </main>
+	</div> <!-- row.// -->
+
+	<br><br>
+
+
+    </div> <!-- container .//  -->
+</section>
+<!-- ============== SECTION CONTENT END// ============== -->
+
+{% endblock %}

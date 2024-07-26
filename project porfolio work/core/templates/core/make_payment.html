@@ -1,0 +1,43 @@
+{% extends 'core/skeleton.html' %}
+
+{% block title %}Make Payment{% endblock %}
+
+{% block body %}
+
+<div class="card shadow mx-auto" style="max-width:400px;">
+    <div class="card-body">
+	<h4 class="card-title mb-4">Make payment for <br> GHC {% widthratio payment.amount 100 1 %}</h4>
+	    
+	<button class="btn btn-primary w-100" type="submit" onclick="payWithPayStack()" id="paystack-button">Pay</button>
+
+
+    </div> <!-- card-body.// -->
+</div> <!-- card .// -->
+
+
+
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+ function payWithPayStack(){
+     let currency = "GHS";
+     let plan = "";
+     let ref = "{{ payment.ref }}"
+     let obj = {
+	 key: "{{ paystack_public_key }}",
+	 email: "{{ payment.user.email }}",
+	 amount: "{{ payment.amount }}",
+	 currency: currency,
+	 ref: ref,
+	 callback: function(res){
+	     window.location.href = "{% url 'verify_payment' payment.ref %}"
+	 }
+	 
+     }
+     let handler = PaystackPop.setup(obj)
+     handler.openIframe();
+ }
+
+ 
+</script>
+{% endblock %}

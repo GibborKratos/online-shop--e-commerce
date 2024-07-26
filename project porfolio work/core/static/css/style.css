@@ -1,0 +1,67 @@
+.invalid-feedback{
+    display: block;
+}
+
+.chat-container{
+    height:50vh;
+}
+
+.chatter{
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.chatter:hover{
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+/* #chat-log { */
+/*   max-width: 80%; */
+/*   margin: auto; */
+/* } */
+
+/* .sent, */
+/* .replies { */
+/*   max-width: 70%; */
+/*   border-radius: 10px; */
+/* } */
+
+/* .sent { */
+/*   background-color: #A8DDFD; /\* light blue *\/ */
+/*   float: right; */
+/*   clear: both; */
+/* } */
+
+/* .replies { */
+/*   background-color: #E5E5E5; /\* light gray *\/ */
+/*   float: left; */
+/*   clear: both; */
+/* } */
+
+/* ul{ */
+/*     list-style-type: none; */
+/*     overflow-y: auto; */
+/*     height: 60vh; */
+/* } */
+
+.sent, .replies{
+    width: 60%;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    display: inline-block;
+}
+#chat-log{
+    background-color: white;
+    border-radius: 10px;
+}
+
+.sent{
+    background-color: #0d6efd;
+    color: white;
+    
+}
+.replies{
+    background-color: #f4f7f6;
+}

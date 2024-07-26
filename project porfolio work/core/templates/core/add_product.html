@@ -1,0 +1,65 @@
+{% extends 'core/skeleton.html' %}
+{% block title %} Add product {% endblock %}
+{% block body %}
+<div class="card shadow mx-auto" style="max-width:400px;">
+    <div class="card-body">
+	<h4 class="card-title mb-4">Add product</h4>
+	<form method="post" enctype="multipart/form-data">
+	    {% csrf_token %}
+	    <div class="mb-3">
+		<label class="form-label">Name</label>
+		{{ form.name }}
+	    </div>
+	    <div class="mb-3">
+		<label class="form-label">Category</label>
+		{{ form.category }}
+	    </div>
+
+	    <div class="mb-3">
+		<label class="form-label">Description</label>
+		{{ form.description }}
+	    </div>
+	    
+	    <div class="mb-3">
+		<label class="form-label">Price</label>
+		{{ form.price }}
+	    </div>
+
+	    <div class="mb-3">
+		<label class="form-label">Stock</label>
+		{{ form.stock }}
+	    </div>
+	    
+	    <input name="vendor" value="{{ user.id}}" type="hidden">
+	    <div class="mb-3">
+		<label class="form-label">Image</label>
+		{{ form.image }}
+		{% for error in form.image.errors %}
+		<div class="invalid-feedback">{{ error }}</div>
+		{% endfor %}
+		
+	    </div>
+
+
+
+	    <div class="mb-4">
+		<button type="submit" class="btn btn-primary w-100"> Add product </button>
+	    </div> 
+	    
+	</form>
+
+    </div> <!-- card-body.// -->
+</div> <!-- card .// -->
+
+
+
+
+
+{% endblock %}
+
+
+<!-- <form method="post" enctype="multipart/form-data">
+     {% csrf_token %}
+     {{ form.as_p }}
+     <button type="submit">Add Product</button>
+     </form> -->

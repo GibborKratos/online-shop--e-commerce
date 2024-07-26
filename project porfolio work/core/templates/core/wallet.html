@@ -1,0 +1,34 @@
+{% extends 'core/skeleton.html' %}
+
+{% block title %}Wallet{% endblock %}
+
+{% block body %}
+
+<div class="card shadow mx-auto" style="max-width:400px;">
+    <div class="card-body">
+	<h4 class="card-title mb-4">Buy Coins</h4>
+	<form method="post">
+	    {% csrf_token %}
+	    <div class="mb-3">
+		<label class="form-label">Amount</label>
+		<input name="amount" class="form-control" type="number" min="1" value="1" />
+	    </div>
+	    <input name="user" type="hidden" value="{{ user }}"/>
+	    
+	    <button class="btn btn-primary w-100" type="submit">Buy Coins</button>
+	</form>
+	<br>
+	<p class="text-secondary">By purchasing coins you agree to our <a href="#">Terms of Service</a><p>
+
+
+
+    </div> <!-- card-body.// -->
+</div> <!-- card .// -->
+
+
+
+
+{% endblock %}
+
+
+

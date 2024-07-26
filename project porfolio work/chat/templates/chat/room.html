@@ -1,0 +1,139 @@
+{% extends 'core/skeleton.html' %}
+
+{% load static %}
+{% block title %}Chat room{% endblock %}
+{% block body  %}
+
+<main class="card p-3">
+	    <div class="row">
+		<aside class="col-lg-3" style="border-right: 2px solid #f8f9fa">
+		    <nav class="nav flex-column nav-pills mb-3 mb-lg-0">
+			{% if not unique_interactions %}
+			<p class="text-center text-muted">No Messages</p>
+			{% endif %}
+			
+			{% for interaction in unique_interactions %}
+			<a href="/chat?author={{ interaction.author_username }}&recipient={{ interaction.recipient_username }}">
+			    <figure class="d-flex align-items-center">
+			    <div class="me-3 flex-grow-0">
+				<span class="bg-gray icon-md rounded-circle">
+				    <img src="/static/images/avatar.jpg" class="size-56x56 rounded-circle">
+				</span>
+			    </div>
+			    <figcaption>
+				<h6 class="fw-normal chatter">{{ interaction.other_user_name }}</h6>
+			    </figcaption>
+			    </figure>
+			    <hr>
+			</a>
+
+			{% endfor %}
+		    </nav>
+		</aside>
+		<div class="col-lg-9 chat-box">
+
+		    <div class="row">
+			<div class="col-xxl-9 col-lg-8">
+			    <div class="chat-container container overflow-auto"><ul id="chat-log" ></ul>
+
+				
+
+			    </div>
+			    <div class="input-group mb-3">
+				<input id="chat-message-input" class="form-control" type="text" required>
+				<button id="chat-message-submit" class="btn btn-primary float-end" type="button"><i class='fa-solid fa-paper-plane'></i></button>
+			    </div>
+			</div> <!-- row.// -->
+		</div>
+		<!-- col.// -->
+	    </div>
+</main>
+
+
+<br>
+
+<script src="{% static 'js/reconnecting-websocket.js' %}"></script>
+<script>
+ var roomName = {{ room_name }};
+ var author = {{ author }};
+ var recipient = {{ recipient }};
+ var user = "{{ user.username }}";
+
+ var chatSocket = new WebSocket(
+     'ws://' + window.location.host +
+     '/ws/chat/' + roomName + '/');
+
+ chatSocket.onopen = function(e) {
+     fetchMessages();
+ }
+
+ chatSocket.onmessage = function(e) {
+     var data = JSON.parse(e.data);
+     if (data['command'] === 'messages') {
+         for (let i=0; i<data['messages'].length; i++) {
+             createMessage(data['messages'][i]);
+         }
+     } else if (data['command'] === 'new_message'){
+         createMessage(data['message']);
+     }
+ };
+
+ chatSocket.onclose = function(e) {
+     console.error('Chat socket closed unexpectedly');
+ };
+
+ document.querySelector('#chat-message-input').onkeyup = function(e) {
+     if (e.keyCode === 13) {  // enter, return
+         document.querySelector('#chat-message-submit').click();
+     }
+ };
+
+ document.querySelector('#chat-message-submit').onclick = function(e) {
+     var messageInputDom = document.getElementById('chat-message-input');
+     var message = messageInputDom.value;
+     if (message !== ''){
+	 if(user==recipient){
+	     var receiver = author;
+	 }
+	 else{
+	     var receiver = recipient;
+	 }
+	 chatSocket.send(JSON.stringify({
+             'command': 'new_message',
+             'message': message,
+             'from': user,
+	     'to': receiver
+	 }));
+     }
+
+     messageInputDom.value = '';
+ };
+ function fetchMessages() {
+     chatSocket.send(JSON.stringify({
+	 'command': 'fetch_messages',
+	 'from': author,
+	 'to': recipient,
+     }));
+ }
+
+ function createMessage(data) {
+     var author = data['author'];
+     var msgListTag = document.createElement('li');
+     var spanTag = document.createElement('span')
+     var imgTag = document.createElement('img');
+     var pTag = document.createElement('p');
+     pTag.textContent = data.content;
+     imgTag.src = "{% static 'images/avatar.jpg' %}"
+     
+     if (author === user) {
+         msgListTag.className = 'sent float-end';
+     } else {
+         msgListTag.className = 'replies';
+     }
+     msgListTag.appendChild(pTag);
+     document.querySelector('#chat-log').appendChild(msgListTag);
+ }
+
+</script>
+{% endblock %}
+	

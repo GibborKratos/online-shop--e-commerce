@@ -1,0 +1,281 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block body %}
+    {% if error_message %}
+    <div class="alert alert-danger">
+      {{ error_message }}
+    </div>
+    {% elif success_message %}
+    <div class="alert alert-success">
+	{{ success_message }}
+    </div>
+
+    {% endif%}
+
+<!-- ============== SECTION CONTENT ============== -->
+<section class="padding-y">
+    <div class="container">
+
+	<div class="row">
+	    <aside class="col-lg-6">
+
+		<figure class="gallery-wrap">
+		    <a href="#" class="img-main-wrap mb-3 img-thumbnail" style="height: 520px">
+			<img src="{{ product.image.url }}" class="h-100 img-cover">
+		    </a>
+
+		</figure>
+
+	    </aside>
+	    <main class="col-lg-6">
+		<article class="ps-lg-3">
+		    <h4 class="title text-dark">{{ product.name }}</h4>
+		    <div class="mb-2"> 
+			<var class="price h5">GHC {{ product.price|pesewas_to_cedis|intcomma }}</var> 
+		    </div> 
+
+		    <p>{{ product.description }}</p>
+		    
+
+		    <dl class="row">
+			<dt class="col-3 fw-normal text-muted">Seller</dt>
+			<dd class="col-9">{{ product.vendor }}</dd>
+		    </dl>
+
+		    <hr>
+
+		    <div class="col-md-4 col-6 mb-2">
+			
+
+			<form method="post">
+			    {% csrf_token %}
+			    <label class="form-label d-block">Quantity</label>   
+			    <input name ="quantity" type="number" min="1" max="{{ product.stock }}" value="1" class="form-control" >
+			  
+			    <input name="user_id" type="hidden" value="{{ user.id }}"/>
+			    <input name="product_id" type="hidden" value="{{ product.id }}"/>
+			    <input name="price" type="hidden" value="{{ product.price }}"/>
+			    <input name="action" type="hidden" value="add"/>
+
+		    </div> <!-- col.// -->
+		    
+		    <button type="submit" class="btn  btn-warning"> Add to cart </button>
+			</form>
+			<button class="btn  btn-primary" data-bs-toggle="modal" data-bs-target="#bargainModal"> <i class="me-1 fa fa-handshake"></i> Bargain </button>
+			<!-- <a href="/chat?author={{ user.username }}&recipient={{ product.vendor.username }}" id="" class="btn  btn-light"><i class="fas fa-comments"></i>  Chat </a> -->{% if user.is_authenticated %}
+			<button id="chatButton" data-bs-toggle="modal" data-bs-target="#chatModal" class="btn btn-light">
+			    <i class="fas fa-comments"></i> Chat
+			</button>
+			{% endif %}
+
+			
+		</article> <!-- product-info-aside .// -->
+	    </main> <!-- col.// -->
+	</div> <!-- row.// -->
+
+    </div> <!-- container .//  -->
+</section>
+<!-- ============== SECTION CONTENT END// ============== -->
+
+<!-- ============== SECTION  ============== -->
+<section class="padding-bottom">
+    <div class="container">
+	<div class="row">
+	    <div class="col-lg-8 col-xl-9">
+		<!-- =================== COMPONENT SPECS ====================== -->
+		<div class="card">
+		    <header class="card-header">
+			<ul class="nav nav-tabs card-header-tabs">
+			    <li class="nav-item">
+				<a href="#" data-bs-target="#tab_shipping" data-bs-toggle="tab" class="nav-link">Shipping info</a>
+			    </li>
+			</ul>
+		    </header>
+		    <div class="tab-content">
+			
+			<article id="tab_shipping" class="tab-pane card-body">
+			    Orders are typically processed within 24-48 hours and standard shipping orders arrive in 5-7 business days. You will be emailed a tracking number once your order has been shipped to track your package.
+			</article>
+		    </div>
+		</div>
+		<!-- =================== COMPONENT SPECS .// ================== -->   
+	    </div> <!-- col.// -->
+	    <aside class="col-lg-4 col-xl-3">
+		<!-- =================== COMPONENT ADDINGS ====================== -->
+		<div class="card">
+		    <div class="card-body">
+			<h5 class="card-title">Similar items</h5>
+			{% for product in similar_products %}
+			<article class="d-flex mb-4">
+			    <a href="/product_detail/{{product.id}}/" class="me-2 flex-shrink-0">
+				<img src="{{ product.image.url }}" width="96" height="96" class="size-96x96 img-thumbnail">
+			    </a>
+			    <div>
+				<p class="mb-2">
+            			    <a href="/product_detail/{{product.id}}/" class="text-body">{{ product.name }}</a>
+				</p>
+				<strong class="price mb-0">GHC {{ product.price|pesewas_to_cedis|intcomma }}</strong>
+			    </div>
+			</article>
+			{% endfor %}
+
+		    </div> <!-- card-body .// -->
+		</div> <!-- card .// -->
+		<!-- =================== COMPONENT ADDINGS .// ================== --> 
+	    </aside> <!-- col.// -->
+	</div>
+
+	<br><br>
+
+    </div><!-- container // -->
+</section>
+<!-- =============== SECTION  END// ============== -->
+
+
+<div class="modal fade" id="bargainModal" tabindex="-1" aria-labelledby="bargainModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Bargain</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form method="post">
+	      {% csrf_token %}
+              <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Quantity</label>
+              <input name ="quantity" type="number" min="1" max="{{ product.stock }}" value="1" class="form-control" >
+	      
+	      <input name="user_id" type="hidden" value="{{ user.id }}"/>
+	      <input name="product_id" type="hidden" value="{{ product.id }}"/>
+	      
+	      <input name="action" type="hidden" value="bargain"/>
+          </div>
+	   <div class="mb-3">
+               <label for="recipient-name" class="col-form-label">Price</label>
+	       <input name="price" class="form-control" type="number" value="{% widthratio product.price 100 1 %}"/>
+	   </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Bargain</button>
+	  </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title" id="exampleModalLabel">Chat</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container">
+		    <ul class="container" id="chat-log" ></ul>
+
+		    <div class="input-group mb-3">
+			<input id="chat-message-input" class="form-control" type="text" required>
+			<button id="chat-message-submit" class="btn btn-primary float-end" type="button"><i class='fa-solid fa-paper-plane'></i></button>
+		    </div>
+
+		</div>
+	    </div>
+	    </div>
+	</div>
+    </div>
+    <script src="{% static 'js/reconnecting-websocket.js' %}"></script>
+    <script>
+     var roomName = "room";
+     var username = "{{ user.username }}";
+     var recipient = "{{ product.vendor.username }}";
+
+     var chatSocket = new ReconnectingWebSocket(
+	 'ws://' + window.location.host +
+	 '/ws/chat/' + roomName + '/');
+
+     chatSocket.onopen = function(e) {
+	 fetchMessages();
+     }
+
+     chatSocket.onmessage = function(e) {
+	 var data = JSON.parse(e.data);
+	 if (data['command'] === 'messages') {
+             for (let i=0; i<data['messages'].length; i++) {
+		 createMessage(data['messages'][i]);
+             }
+	 } else if (data['command'] === 'new_message'){
+             createMessage(data['message']);
+	 }
+     };
+
+     chatSocket.onclose = function(e) {
+	 console.error('Chat socket closed unexpectedly');
+     };
+
+     document.querySelector('#chat-message-input').onkeyup = function(e) {
+	 if (e.keyCode === 13) {  // enter, return
+             document.querySelector('#chat-message-submit').click();
+	 }
+     };
+
+     document.querySelector('#chat-message-submit').onclick = function(e) {
+	 var messageInputDom = document.getElementById('chat-message-input');
+	 var message = messageInputDom.value;
+	 if (message !== ''){
+	     chatSocket.send(JSON.stringify({
+		 'command': 'new_message',
+		 'message': message,
+		 'from': username,
+		 'to': recipient
+	     }));
+	 }
+
+	 messageInputDom.value = '';
+     };
+
+     function fetchMessages() {
+	 chatSocket.send(JSON.stringify({
+	     'command': 'fetch_messages',
+	     'from': username,
+	     'to': recipient,
+	 }));
+     }
+
+     function createMessage(data) {
+	 var author = data['author'];
+	 var msgListTag = document.createElement('li');
+	 var spanTag = document.createElement('span')
+	 var imgTag = document.createElement('img');
+	 var pTag = document.createElement('p');
+	 pTag.textContent = data.content;
+	 imgTag.src = "{% static 'images/avatar.jpg' %}"
+	 
+	 if (author === username) {
+             msgListTag.className = 'sent float-end';
+	 } else {
+             msgListTag.className = 'replies';
+	 }
+	 /* spanTag.className = "bg-gray icon-md rounded-circle"
+	  * imgTag.className = "size-56x56 rounded-circle" */
+	 /* spanTag.appendChild(imgTag) */
+	 /* msgListTag.appendChild(spanTag); */
+	 msgListTag.appendChild(pTag);
+	 document.querySelector('#chat-log').appendChild(msgListTag);
+     }
+
+    </script>
+
+
+
+{% endblock %}
+
+

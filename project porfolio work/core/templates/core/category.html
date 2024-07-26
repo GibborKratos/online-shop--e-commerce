@@ -1,0 +1,40 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %}Categories{% endblock %}
+{% block body %}
+
+
+<!-- ================ SECTION PRODUCTS ================ -->
+<section class="pb-3">
+    <div class="container">
+
+	<header class="section-heading">
+	    <h3>{{category}}</h3>
+	</header>
+
+	<div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2">
+
+	    {% for product in products %}
+	    <div class="col">
+		<figure class="card card-product-grid">
+		    <a href="{% url 'product_detail' product.id %}" data-bs-toggle="tooltip" data-bs-title="{{ product.description|smart_truncate:50 }}" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
+		    <figcaption class="p-3">
+			<div class="price-wrap">
+			    <span class="price">GHC {{ product.price|pesewas_to_cedis|intcomma }}</span>
+			</div> <!-- price-wrap.// -->
+			<a href="{% url 'product_detail' product.id %}" data-bs-toggle="tooltip" data-bs-title="{{ product.name }}" class="title"> {{ product.name|smart_truncate:20 }}</a>
+		    </figcaption>
+		</figure>
+	    </div> <!-- col end.// -->
+	    {% endfor %}
+
+	</div> <!-- row end.// -->
+    </div> <!-- container end.// -->
+</section>
+<!-- ================ SECTION PRODUCTS END.// ================ -->
+
+
+
+{% endblock %}

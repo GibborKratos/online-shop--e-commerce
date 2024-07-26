@@ -1,0 +1,216 @@
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+<!DOCTYPE HTML>
+<html lang="en">
+    <!-- Brevo Conversations {literal} -->
+    <script>
+     (function(d, w, c) {
+         w.BrevoConversationsID = '654172df194074038e03d9a3';
+         w[c] = w[c] || function() {
+             (w[c].q = w[c].q || []).push(arguments);
+         };
+         var s = d.createElement('script');
+         s.async = true;
+         s.src = 'https://conversations-widget.brevo.com/brevo-conversations.js';
+         if (d.head) d.head.appendChild(s);
+     })(document, window, 'BrevoConversations');
+    </script>
+    <!-- /Brevo Conversations {/literal} -->
+    <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Type some info">
+	<meta name="author" content="Type name">
+
+	<title>{% block title %}{% endblock %}</title>
+
+	<!-- Bootstrap css -->
+	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" type="text/css" />
+	<!-- Custom css -->
+	<link href="{% static 'css/ui.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'css/responsive.css' %}" rel="stylesheet" type="text/css" />
+	<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css" />
+
+	<!-- Font awesome 6 -->
+	<link href="{% static 'css/fontawesome.min.css' %}" type="text/css" rel="stylesheet">
+	<link href="{% static 'css/brands.min.css' %}" type="text/css" rel="stylesheet">
+	<link href="{% static 'css/solid.min.css' %}" type="text/css" rel="stylesheet">
+
+    </head>
+    <body class="bg-light">
+	<header class="section-header">
+	    
+	    <section class="header-main bg-white border-bottom py-lg-3 py-2">
+		<div class="container">
+		    <div class="row gx-2 align-items-center">
+			
+			<div class="col-xl-2 col-lg col-6 col-sm-6  col-md flex-grow-0">
+			    <a class='brand-wrap me-3' href='/'>
+				<img class="logo" height="40" src="{% static 'images/logo.svg' %}">
+			    </a> <!-- brand-wrap end.// -->
+			</div> <!-- col end.// -->
+
+			<div class="col-xl-5 col-lg-4 col-12 col-sm-12 col-md">
+			    <form action="{% url 'search' %}" class="search my-3 my-lg-0">
+				<div class="input-group">
+				    <input type="search" class="form-control" style="width:55%" name="q" placeholder="Search">
+				    <button type="submit" class="btn btn-primary">
+					<i class="fa fa-search"></i>
+				    </button>
+				</div> <!-- input-group end.// -->
+			    </form> <!-- search-wrap end.// -->
+			</div> <!-- col end.// -->
+
+			<div class="col-xl-5" col-lg col-md-12 col-12">
+			    
+			    <!-- widgets-wrap  -->
+			    <div class="float-lg-end">
+				
+				
+				{% if user.is_authenticated %}
+				<div class="widget-header mx-2 text-center" style="min-width:44px">
+				    <a href="{% url 'profile' %}" class="d-inline-block align-middle">
+					<span class="fs-5 d-inline-block"> <i class="fa fa-user"></i> </span>
+					<small style="max-width:80px;" class="d-block text-truncate"> Profile </small>
+				    </a>
+				</div>
+
+				<div class="widget-header mx-2 text-center" style="min-width:44px">
+				    <a href="{% url 'chat' %}" class="d-inline-block align-middle">
+					<span class="icon-28 fs-5 d-inline-block position-relative">
+					    <i class="fa fa-comment-dots"></i> 
+					</span>
+					<small style="max-width:80px;" class="d-block text-truncate"> Message </small>
+				    </a>
+				</div>
+				
+				<div class="widget-header mx-2 text-center" style="min-width: 44px;">
+				    <a href="{% url 'wallet' %}" class="d-inline-block align-middle">
+					<span class="fs-5 d-inline-block"> <i class="fa fa-coins"></i> </span>
+					<small style="max-width:80px;" class="d-block text-truncate"> {{ user.wallet|pesewas_to_cedis|intcomma }} </small>
+				    </a>
+				</div>
+
+				<div class="widget-header mx-2 text-center" style="min-width: 44px;">
+				    <a href="{% url 'cart' %}" class="d-inline-block align-middle">
+					<span class="fs-5 d-inline-block"> <i class="fa fa-shopping-cart"></i> </span>
+					<small style="max-width:80px;" class="d-block text-truncate"> Cart </small>
+					{% if cart_items|length > 0 %}
+					<span class="notify">
+					    {{ cart_items|length }}
+					</span>
+					{% endif %}
+
+					
+				    </a>
+				</div>
+				
+				 
+
+				<div class="widget-header mx-2 text-center" style="min-width: 44px;">
+				    <a href="{% url 'my_shop' %}" class="d-inline-block align-middle">
+					<span class="fs-5 d-inline-block"> <i class="fa fa-shop"></i> </span>
+					<small style="max-width:80px;" class="d-block text-truncate"> My Shop </small>
+					
+				    </a>
+				</div>
+
+				<div class="widget-header mx-2 text-center" style="min-width: 44px;">
+				    <a href="{% url 'account_logout' %}" class="d-inline-block align-middle">
+					<span class="fs-5 d-inline-block"> <i class="fa fa-right-from-bracket"></i> </span>
+					<small style="max-width:80px;" class="d-block text-truncate"> Logout </small>
+				    </a>
+				</div>
+
+				
+				{% else %}
+				<a href="{% url 'account_login' %}" class="ms-md-2 btn btn-primary"> Login </a>
+				<a href="{% url 'account_signup' %}" class="ms-md-2 btn btn-warning"> 
+				     Signup
+				</a>
+			{% endif %}
+
+
+				
+
+			    </div> 
+			    <!-- widgets-wrap.// -->
+			</div> <!-- col end.// -->
+		    </div> <!-- row end.// -->
+		</div> <!-- container end.// -->
+	    </section> <!-- header-main end.// -->
+
+
+	</header> <!-- section-header end.// -->
+	<section class="padding-y bg-light" style="min-height:90vh">
+	    <div class="container">
+		{% block body %}
+		{% endblock %}
+	    </div>
+	</section>
+
+
+	<footer class="section-footer footer-dark bg-dark">
+	    <div class="container">
+		<section class="footer-main padding-y">
+		    <div class="row">
+			<aside class="col-12 col-sm-12 col-lg-4">
+			    <article class="me-lg-5">
+				<img src="{% static 'images/logo-white.svg' %}" height="44" class="logo-footer">
+				<p class="mt-3 text-white-50"> here is some information about our company, We work since 1990 and still growing.</p>
+				<nav class="mb-4 mb-lg-0">
+				    <a class="btn btn-icon btn-primary" title="Facebook" target="_blank" href="#"><i
+														      class="fab fa-facebook-f"></i></a>
+				    <a class="btn btn-icon btn-primary" title="Instagram" target="_blank" href="#"><i
+														       class="fab fa-instagram"></i></a>
+				    <a class="btn btn-icon btn-primary" title="Youtube" target="_blank" href="#">
+					<i class="fab fa-youtube"></i></a>
+				    <a class="btn btn-icon btn-primary" title="Twitter" target="_blank" href="#"><i
+														     class="fab fa-twitter"></i></a>
+				</nav>
+			    </article>
+			</aside>
+			<aside class="col-6 col-sm-4 col-lg-2">
+			    <h6 class="title">Store</h6>
+			    <ul class="list-menu mb-4">
+				<li> <a href="#">About us</a></li>
+				<li> <a href="#">Categories</a></li>
+			    </ul>
+			</aside>
+			<aside class="col-6 col-sm-4 col-lg-2">
+			    <h6 class="title">Information</h6>
+			    <ul class="list-menu mb-4">
+				<li> <a href="#">Terms of Service</a></li>
+				<li> <a href="#">How we make money</a></li>
+			    </ul>
+			</aside>
+			<aside class="col-6 col-sm-4  col-lg-2">
+			    <h6 class="title">Support</h6>
+			    <ul class="list-menu mb-4">
+				<li> <a href="#">FAQ </a></li>
+				<li> <a href="#">Report an Issue </a></li>
+			    </ul>
+			</aside>
+		    </div> <!-- row.// -->
+		</section> <!-- footer-top.// -->
+		<hr class="my-0">
+		<section class="footer-bottom d-flex justify-content-between">
+		    <div class="text-white-50">
+			© 2023 The Shop.
+		    </div>
+
+		</section>
+	    </div> <!-- container end.// -->
+	</footer>
+
+	<!-- Bootstrap js -->
+	<!-- <script src="{% static 'js/bootstrap.min.js' %}"></script> -->
+	<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+	<!-- Custom js -->
+	<script src="{% static 'js/script.js' %}"></script>
+
+    </body>
+</html>
+

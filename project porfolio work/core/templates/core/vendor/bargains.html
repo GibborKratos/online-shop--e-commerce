@@ -1,0 +1,63 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %}Bargains{% endblock %}
+
+{% block body %}
+{% if error_message %}
+<div class="notification is-danger">
+    <button class="delete"></button>
+    {{ error_message }}
+</div>
+{% elif success_message %}
+<div class="notification is-success">
+    <button class="delete"></button>
+    {{ success_message }}
+</div>
+{% endif%}
+<h1 class="title">Bargains</h1>
+
+<table class="table">
+    <tr>
+	<th>Product</th>
+	<th>Original Price</th>
+	<th>Bargain Price</th>
+	<th>Quantity</th>
+	<th>Status</th>
+	<th>Actions</th>
+	<th></th>
+	    
+    </tr>
+    {% for bargain in bargains %}
+    <tr>
+	<td>{{ bargain.product }}</td>
+	<td>GHC {{ bargain.product.price|pesewas_to_cedis|intcomma }}</td>
+	<td>GHC {{ bargain.price|pesewas_to_cedis|intcomma }} </td>
+	<td>{{ bargain.quantity }}</td>
+	{% if bargain.approved %}
+	<td class="has-text-success">Approved</td>
+	{% else %}
+	<td class="has-text-danger">Not Approved</td>
+	{% endif %}
+
+	{% if not bargain.approved %}
+	<td>
+	    <form method="post">
+		{% csrf_token %}
+		<input name="bargain_id" type="hidden" value="{{ bargain.id }}"/>
+		<button class="btn btn-success">Approve</button>
+	    </form>
+	</td>
+	{% endif %}
+	<td>
+	    
+	    <a href="/delete_bargain/{{ bargain.id }}"><button class="btn btn-danger">Delete</button></a>
+	</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+
+

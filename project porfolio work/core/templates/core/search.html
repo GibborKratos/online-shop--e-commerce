@@ -1,0 +1,79 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %}Search{% endblock %}
+{% block body %}
+
+<!-- ================ SECTION PRODUCTS ================ -->
+<section class="pb-3">
+    <div class="container">
+
+	<header class="section-heading">
+	    <h3>Search results for "{{ query }}"</h3>
+	</header>
+
+	<div class="row row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-2">
+
+	    {% for product in page %}
+	    <div class="col">
+		<figure class="card card-product-grid">
+		    <a href="{% url 'product_detail' product.id %}" data-bs-toggle="tooltip" data-bs-title="{{ product.description|smart_truncate:50 }}" class="img-wrap"> <img src="{{ product.image.url }}"> </a>
+		    <figcaption class="p-3">
+			<div class="price-wrap">
+			    <span class="price">GHC {{ product.price|pesewas_to_cedis|intcomma }}</span>
+			</div> <!-- price-wrap.// -->
+			<a href="{% url 'product_detail' product.id %}" class="title">{{ product.name|smart_truncate:20 }}</a>
+		    </figcaption>
+		</figure>
+	    </div> <!-- col end.// -->
+	    {% endfor %}
+
+	</div> <!-- row end.// -->
+    </div> <!-- container end.// -->
+
+    <nav>
+        <ul class="pagination">
+	    {% if page.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'search' %}?q={{ query }}&page={{ page.previous_page_number }}">Prev</a>
+            </li>
+	    <li class="page-item">
+                <a class="page-link" href="{% url 'search' %}?q={{ query }}&page=1">1</a>
+            </li>
+	    {% if not page.number == 2 %}
+	    <li class="page-item">
+                <a class="page-link">...</a>
+            </li>
+	    {% endif  %}
+	    {% endif %}
+                <li class="page-item active"><a class="page-link" href="#">{{ page.number }}</a></li>
+		{% if page.has_next %}
+		<li class="page-item">
+                    <a class="page-link" href="{% url 'search' %}?q={{ query }}&page={{ page.next_page_number }}">{{ page.next_page_number }}</a>
+                </li>
+		
+		{% if not page.next_page_number == page.paginator.num_pages %}
+		{% if not page.next_page_number|increment == page.paginator.num_pages or page.number|increment != page.next_page_number %}
+		<li class="page-item">
+                    <a class="page-link">...</a>
+                </li>
+		{% endif %}
+		<li class="page-item">
+                    <a class="page-link" href="{% url 'search' %}?q={{ query }}&page={{ page.paginator.num_pages }}">{{ page.paginator.num_pages }}</a>
+                </li>
+		
+		{% endif %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'search' %}?q={{ query }}&page={{ page.next_page_number }}">Next</a>
+                </li>
+		{% endif %}
+
+        </ul>
+    </nav>
+</section>
+<!-- ================ SECTION PRODUCTS END.// ================ -->
+
+
+
+{% endblock %}

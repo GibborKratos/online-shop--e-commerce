@@ -1,0 +1,130 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+{% block title %} Profile {% endblock %}
+{% block body %}
+<!-- ============== SECTION CONTENT ============== -->
+<section class="padding-bottom">
+    <div class="container">
+
+	<div class="row">
+	    <main class="col-lg-9  col-xl-9">
+		<article class="card">
+		    <div class="card-body">
+			<h5 class="card-title"> Personal info </h5> 
+			<figure class="d-flex align-items-center">
+			    <div class="me-3 flex-grow-0">
+				<span class="bg-gray icon-md rounded-circle">
+				    <img src="{% static 'images/avatar.jpg' %}" class="size-56x56 rounded-circle">
+				</span>
+			    </div>
+			    <figcaption>
+				<h6 class="fw-normal">{{ user.first_name }} {{ user.last_name }}</h6>
+				<p class="mb-0">
+				    Email: {{ user.email }}, Phone: {{ user.phone }}
+				    <a href="#" class="px-2"><i class="fa fa-pen"></i></a>
+				</p>
+			    </figcaption>
+			</figure>
+
+			<hr>
+
+			<div class="row g-2 mb-3"> 
+			    <!-- ADDRESSES -->
+			    {% for address in addresses %}
+			    <div class="col-md-6">
+				<article class="card shadow-sm">
+				    <div class="p-3">
+					<p class="mb-1"> 
+					    <b class="text-muted me-1"><i class="fa fa-map-marker-alt"></i></b>
+					    {{ address }}
+					</p>
+					<a href="#">Edit</a> <b class="dot"></b> 
+					<a href="#">Delete</a> 
+				    </div>
+				</article>
+			    </div> 
+
+			    {% endfor %}
+			    
+			</div> 
+
+			<a href="/bargains" class="btn btn-primary"> 
+			    Bargains
+			</a>
+
+			<hr class="my-4">
+
+			<h5 class="card-title"> My recent orders </h5> 
+
+
+			
+
+
+			<!--  ======== item order ======== -->
+			{% for order in orders %}
+			<article class="card border-primary mb-4">
+			    <div class="card-body">
+				<header class="d-lg-flex">
+				    <div class="flex-grow-1">
+					<h6 class="mb-0">Order ID:  {{order.id}} <i class="dot"></i>
+					    
+					    {% if order.received %}
+					    <span class="text-primary">RECEIVED </span>
+					    {% elif order.delivered %}
+					    <span class="text-success"> DELIVERED </span>
+					    {% else %}
+					    <span class="text-warning"> NOT DELIVERED </span>
+					    {% endif %}
+					</h6>
+					
+				    </div>
+				    <div>
+					
+				    </div>
+				</header>
+				<hr>
+
+				<ul class="row">
+				    {% for item in order.orderitem_set.all %}
+				    <li class="col-xl-4  col-lg-6">
+					<figure class="d-flex mb-3">
+					    <div class="flex-shrink-0 me-2">
+						<img width="72" height="72" src="{{ item.product.image.url }}" class="size-72x72 img-thumbnail">
+					    </div>
+					    <figcaption>
+						<p class="mb-1">{{ item.product.name}} <br> </p>
+						<b>GHC {{ item.product.price|pesewas_to_cedis|intcomma }} </b>
+					    </figcaption>
+					</figure> 
+				    </li>
+				    {% endfor %}
+				</ul>
+				<b>Total: GHC {{ order.total_price|pesewas_to_cedis|intcomma }}</b>
+				<br>
+				{% if order.received %}
+				
+				{% elif order.delivered %}
+				<a href="/receive/{{order.id}}"><button class="btn btn-success">Received</button></a>
+				{% endif %}
+			    </div> <!-- card-body .// -->
+			    
+			</article> <!-- card .// --> 
+			<!--  ======== item order .// ======== -->
+			{% endfor %}
+
+			
+		    </div> <!-- card-body .// -->
+		</article> <!-- card .// --> 
+	    </main>
+	</div> <!-- row.// -->
+
+	<br><br>
+
+
+    </div> <!-- container .//  -->
+</section>
+<!-- ============== SECTION CONTENT END// ============== -->
+
+{% endblock %}

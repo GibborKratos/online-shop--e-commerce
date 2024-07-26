@@ -1,0 +1,21 @@
+<form method="post">
+    {% csrf_token %}
+    <div class="field">
+	<label class="label">Bargain Price</label>
+	<div class="control">
+	    <input class="input" type="number" name="price" placeholder="Bargain price" required>
+	</div>
+    </div>
+    <div class="field">
+	<label class="label">Quantity</label>
+	<div class="control">
+	    <input class="input" type="number" name="quantity" placeholder="Quantity" min="1" max="{{ product.stock }}" required>
+	</div>
+    </div>
+    <input name="user_id" type="hidden" value="{{ user.id }}"/>
+    <input name="product_id" type="hidden" value="{{ product.id }}"/>
+    <input name="action" type="hidden" value="bargain"/>
+    <button class="button is-link " type="submit"> <span class="icon is-small">
+	<i class="fa-solid fa-handshake "></i>
+    </span><span>Bargain</span></button>
+</form>

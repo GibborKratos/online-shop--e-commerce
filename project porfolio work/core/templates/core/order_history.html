@@ -1,0 +1,25 @@
+{% extends 'core/skeleton.html' %}
+{% load custom_filters %}
+{% block title %}Order History{% endblock %}
+
+{% block body %}
+<table class="table">
+  <tr>
+    <th>Id</th>
+    <th>Product</th>
+    <th>Quantity</th>
+    <th>Status</th>
+    </tr>
+{% for order in orders %}
+  <tr>
+    <th>{{order.id}}</th>
+    <th><a href="/product_detail/{{order.product_id}}">{{ order.product_id | get_product_name }}</a></th>
+    <th>{{ order.quantity }}</th>
+    <th>{{ order.status }}</th>
+    </tr>
+{% endfor %}
+
+</table>
+{% endblock %}
+
+
