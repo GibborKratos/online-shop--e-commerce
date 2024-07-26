@@ -1,0 +1,32 @@
+{% extends 'core/skeleton.html' %}
+{% load static %}
+{% block title %} Log In {% endblock %}
+{% block body %}
+<div class="card shadow mx-auto" style="max-width:400px;">
+    <div class="card-body">
+	
+	<h4 class="card-title mb-4">Are you sure you want to log out?</h4>
+	<form method="post" action="/accounts/logout/">
+	    {% csrf_token %}
+	    <div class="mb-3">
+		<a class='brand-wrap me-3' href='/'>
+		    
+		</a> <!-- brand-wrap end.// -->
+	    </div>
+
+
+	    <div class="mb-4">
+		<button type="submit" class="btn btn-primary w-100"> Log out  </button>
+	
+	    </div>
+	    <a href="{% url 'home' %}" class="btn btn-outline-secondary w-100"> Go back  </a>
+	    
+	</form>
+    </div> <!-- card-body.// -->
+</div> <!-- card .// -->
+
+
+
+
+
+{% endblock %}

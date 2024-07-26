@@ -1,0 +1,26 @@
+{% extends "core/skeleton_nonav.html" %}
+
+{% load i18n %}
+{% load account %}
+
+{% block title %}{% trans "Email Verification Sent" %}{% endblock %}
+
+ {% block body %}
+ <div class="card shadow mx-auto" style="max-width:600px;">
+     <div class="card-body">
+	 <h4 class="card-title mb-4">{% trans "Email Verification Sent" %}</h4> 
+	 {% if user.is_authenticated %}
+	    {% include "account/snippets/already_logged_in.html" %}
+	 {% endif %}
+	 <div class="mb-3">
+	     <p>{% blocktrans %}We have sent an email to you for verification. Follow the link provided to finalize the signup process. If you do not see the verification email in your main inbox, check your spam folder. Please contact us if you do not receive the verification email within a few minutes.{% endblocktrans %}</p>
+	     
+	    </div>
+	    
+	    
+	    <a href="{% url 'home' %}"><button class=" w-100 btn btn-primary" >{% trans 'Go Home' %}</button>
+     </div>
+	
+ </div>
+ {% endblock %}
+ 
